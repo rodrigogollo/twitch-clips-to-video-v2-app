@@ -1,6 +1,7 @@
 import { useState, useEffect, ReactElement } from 'react'
 import './App.css'
 import VideoPlayer from './components/VideoPlayer'
+import DrawableTable from './components/DrawableTable'
 
 type TwitchClip = {
   broadcaster_id: string,
@@ -35,15 +36,16 @@ function App() {
   }, [])
 
   return (
-    <>
-      {
+    <div className="App">
+      {/* {
         videoList.map(video => {
           return (
             <VideoPlayer key={video.id} source={video.url} />
           )
         })
-      }
-    </>
+      } */}
+      <DrawableTable />
+    </div>
   )
 
 
