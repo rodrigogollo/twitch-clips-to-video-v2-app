@@ -1,4 +1,4 @@
-import { FC, useState } from "react"
+import { useState } from "react"
 import './DrawableTable.css'
 
 type Item = {
@@ -14,8 +14,32 @@ type Header = {
 }
 
 type itemKeyType = keyof Item
+type clipsKeyType = keyof TwitchClip
 
-function DrawableTable() {
+type TwitchClip = {
+  broadcaster_id: string,
+  broadcaster_name: string,
+  created_at: string,
+  creator_id: string,
+  creator_name: string,
+  duration: string,
+  embed_url: string,
+  game_id: string,
+  id: string,
+  language: string,
+  thumbnail_url: string,
+  tle: string,
+  url: string,
+  video_id: string,
+  view_count: number,
+  vod_offset: number,
+}
+
+type DrawableTableProps = {
+  clips: TwitchClip[]
+}
+
+function DrawableTable({ clips }: DrawableTableProps) {
   const [drawer, toggleDrawer] = useState(false);
 
   const dataList = [
@@ -39,7 +63,7 @@ function DrawableTable() {
   return (
     <table>
       <TableHeader headers={headersList} />
-      <TableBody headers={headersList} items={items} />
+      <TableBody headers={headersList} items={clips} />
     </table>
   );
 }
@@ -63,7 +87,7 @@ function TableHeader({ headers }: TableHeaderProps): JSX.Element {
 
 type TableBodyProps = {
   headers: Header[]
-  items: Item[]
+  items: TwitchClip[]
 }
 
 function TableBody({ headers, items }: TableBodyProps): JSX.Element {
@@ -74,7 +98,7 @@ function TableBody({ headers, items }: TableBodyProps): JSX.Element {
           <tr key={item.id}>
             {headers.map(header => (
               <th key={`${item.id}_${header.heading}`}>
-                {item[header.value as itemKeyType]}
+                {item[header.value as clipsKeyType]}
 
               </th>
             ))}
