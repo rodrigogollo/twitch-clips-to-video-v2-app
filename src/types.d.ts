@@ -15,6 +15,14 @@ type TwitchClip = {
   video_id: string,
   view_count: number,
   vod_offset: number,
+  game: TwitchGame
+}
+
+type TwitchGame = {
+  id: string,
+  box_art_url: string,
+  igdb_id: string,
+  name: string,
 }
 
 type TwitchClipHeadersType = {

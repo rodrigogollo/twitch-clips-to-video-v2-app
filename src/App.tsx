@@ -37,9 +37,26 @@ function App() {
   }, [])
 
   return (
-    <div className="App">
-      <CustomTable headers={TwitchClipHeaders} items={videoList} />
-    </div>
+    <div className="App" style={{
+      display: 'flex', flexDirection: 'row', flexWrap: 'wrap'
+    }}>
+      {/* <CustomTable headers={TwitchClipHeaders} items={videoList} /> */}
+      {
+        videoList.length > 0 &&
+        videoList.map(video => (
+          <>
+            <iframe
+              key={video.id}
+              src={`${video.embed_url}&parent=127.0.0.1`}
+              height="315"
+              width="560"
+              allowFullScreen>
+            </iframe>
+            <img key={`${video.id}_game`} src={video.game.box_art_url.replace('{width}', '300').replace('{height}', '300')} alt={video.game.name} />
+          </>
+        ))
+      }
+    </div >
   )
 
 
