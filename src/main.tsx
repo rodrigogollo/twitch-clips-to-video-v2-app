@@ -1,4 +1,4 @@
-import React, { StrictMode } from 'react'
+import { StrictMode, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './main.css'
@@ -23,6 +23,7 @@ function Root() {
       <div>
         <Link to="/">Home</Link>
         <Link to="/about">About</Link>
+        <Link to="/token">Token</Link>
       </div>
       <hr />
       <Outlet />
@@ -43,12 +44,34 @@ const aboutRoute = new Route({
   component: About,
 })
 
+const tokenRoute = new Route({
+  getParentRoute: () => rootRoute,
+  path: '/token',
+  component: Token,
+})
+
 function About() {
   return <div>Hello from About!</div>
 }
 
+function Token() {
+  const [token, setToken] = useState('')
+
+  const fetchToken = async () => {
+    const response = await fetch('http://localhost:3000/token')
+    const token = await response.json()
+    return token
+  }
+
+  useEffect(() => {
+    fetchToken().then(token => setToken(token))
+  }, [])
+
+  return <div>token: {token}</div>
+}
+
 // Create the route tree using your routes
-const routeTree = rootRoute.addChildren([indexRoute, aboutRoute])
+const routeTree = rootRoute.addChildren([indexRoute, aboutRoute, tokenRoute])
 
 // Create the router using your route tree
 const router = new Router({ routeTree })

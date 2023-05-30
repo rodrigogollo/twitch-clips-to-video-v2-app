@@ -10,7 +10,7 @@ type TwitchClip = {
   id: string,
   language: string,
   thumbnail_url: string,
-  tle: string,
+  title: string,
   url: string,
   video_id: string,
   view_count: number,

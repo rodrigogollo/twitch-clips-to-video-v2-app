@@ -3,6 +3,7 @@ import './App.css'
 import VideoPlayer from './components/VideoPlayer'
 import DrawableTable from './components/DrawableTable'
 import CustomTable from './components/CustomTable'
+import ClipCard from './components/ClipCard'
 
 const TwitchClipHeaders: TwitchClipHeadersType[] = [
   { key: 1, value: 'broadcaster_id' },
@@ -29,6 +30,7 @@ function App() {
   const fetchTwitchClips = async () => {
     const response = await fetch('http://localhost:3000/clips')
     const clips = await response.json()
+    console.log(clips.data)
     return clips.data
   }
 
@@ -37,22 +39,23 @@ function App() {
   }, [])
 
   return (
-    <div className="App" style={{
-      display: 'flex', flexDirection: 'row', flexWrap: 'wrap'
-    }}>
+    <div className="w-screen h-auto flex flex-row flex-wrap bg-[#0E0E10] justify-center">
       {/* <CustomTable headers={TwitchClipHeaders} items={videoList} /> */}
       {
         videoList.length > 0 &&
         videoList.map(video => (
           <>
-            <iframe
+            {/* <iframe
               key={video.id}
               src={`${video.embed_url}&parent=127.0.0.1`}
               height="315"
               width="560"
               allowFullScreen>
-            </iframe>
-            <img key={`${video.id}_game`} src={video.game.box_art_url.replace('{width}', '300').replace('{height}', '300')} alt={video.game.name} />
+            </iframe> */}
+            <ClipCard thumbnail={video.thumbnail_url} game_art={video.game.box_art_url} title={video.title}
+              broadcaster_name={video.broadcaster_name} creator_name={video.creator_name} game_name={video.game.name} view_count={video.view_count} />
+            {/* <img key={video.id} src={video.thumbnail_url} /> */}
+            {/* <img key={`${video.id}_game`} src={video.game.box_art_url.replace('{width}', '300').replace('{height}', '300')} alt={video.game.name} /> */}
           </>
         ))
       }
