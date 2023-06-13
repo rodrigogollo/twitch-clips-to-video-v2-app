@@ -28,16 +28,17 @@ function App() {
   const [clips, setClips] = useState<TwitchClip[]>([])
   const [isClipToggle, setIsClipToggle] = useState<Boolean>(false)
   const [currentClip, setCurrentClip] = useState<string>('')
+  const [filter, setFilter] = useState<string>('diablo iv')
 
   const fetchTwitchClips = async () => {
-    const response = await fetch('http://localhost:3000/clips')
+    const response = await fetch(`http://localhost:3000/clips/game/${filter}`)
     const clips = await response.json()
     console.log(clips.data)
     return clips.data
   }
 
   useEffect(() => {
-    const clips = JSON.parse(localStorage.getItem('clips') ?? '{}')
+    const clips = localStorage.getItem('clips') ? JSON.parse(localStorage.getItem('clips') ?? '{}') : {}
     if (clips?.length > 0) {
       setClips(clips)
     } else {
@@ -67,45 +68,51 @@ function App() {
   }
 
   return (
-    <div className="w-screen h-auto flex flex-row flex-wrap bg-[#0E0E10] justify-center p-10">
-      <button className='text-white m-10 border p-3 h-fit w-fit' onClick={getClips}>Get Clips</button>
-      {/* <CustomTable headers={TwitchClipHeaders} items={clips} /> */}
-      {
-        clips.length > 0 && isClipToggle === false ?
+    <div className="flex flex-col bg-[#0E0E10] p-10 ">
+      <div className="flex flex-row w-full justify-center items-center h-16">
+        <input className="bg-gray border-2 w-1/4 h-fit" type="text" value={filter} onChange={(e) => setFilter(e.target.value)} />
+        <button className='text-white mx-5 border p-3 h-fit w-fit bg-black' onClick={getClips}>Get Clips</button>
+      </div>
 
-          clips.map(video => (
-            <>
-              {/* <iframe
+      <div key='main' className="w-screen h-auto flex flex-row flex-wrap bg-[#0E0E10] justify-center p-10">
+        {/* <CustomTable headers={TwitchClipHeaders} items={clips} /> */}
+        {
+          clips.length > 0 && isClipToggle === false ?
+
+            clips.map(video => (
+              <>
+                {/* <iframe
                 key={video.id}
                 src={`${video.embed_url}&parent=127.0.0.1`}
                 height="315"
                 width="560"
                 allowFullScreen>
               </iframe> */}
-              <ClipCard id={video.id} thumbnail={video.thumbnail_url} game_art={video.game.box_art_url} title={video.title}
-                broadcaster_name={video.broadcaster_name} creator_name={video.creator_name} game_name={video.game.name}
-                view_count={video.view_count} duration={video.duration} handleToggleClip={handleToggleClip} />
-              {/* <img key={video.id} src={video.thumbnail_url} /> */}
-              {/* <img key={`${video.id}_game`} src={video.game.box_art_url.replace('{width}', '300').replace('{height}', '300')} alt={video.game.name} /> */}
-            </>
-          ))
+                <ClipCard id={video.id} thumbnail={video.thumbnail_url} game_art={video.game.box_art_url} title={video.title}
+                  broadcaster_name={video.broadcaster_name} creator_name={video.creator_name} game_name={video.game.name}
+                  view_count={video.view_count} duration={video.duration} handleToggleClip={handleToggleClip} />
+                {/* <img key={video.id} src={video.thumbnail_url} /> */}
+                {/* <img key={`${video.id}_game`} src={video.game.box_art_url.replace('{width}', '300').replace('{height}', '300')} alt={video.game.name} /> */}
+              </>
+            ))
 
-          :
-          clips.filter(clip => clip.id === currentClip).map(video => (
-            <div className="flex flex-col p-3 items-center">
-              <iframe
-                key={video.id}
-                src={`${video.embed_url}&parent=127.0.0.1`}
-                height="600"
-                width="1000"
-                allowFullScreen>
-              </iframe>
-              <button className='text-white m-10 border p-3 w-fit' onClick={handleReturn}>Return</button>
-            </div>
-          ))
-      }
+            :
+            clips.filter(clip => clip.id === currentClip).map(video => (
+              <div className="flex flex-col p-3 items-center">
+                <iframe
+                  key={video.id}
+                  src={`${video.embed_url}&parent=127.0.0.1`}
+                  height="600"
+                  width="1000"
+                  allowFullScreen>
+                </iframe>
+                <button className='text-white m-10 border p-3 w-fit' onClick={handleReturn}>Return</button>
+              </div>
+            ))
+        }
 
-    </div >
+      </div >
+    </div>
   )
 
 
